@@ -225,7 +225,7 @@ a.stat:hover{border-color:var(--line2)}
 // ===== Einstellungen =====
 // Google Maps: API-Schlüssel hier eintragen. Funktioniert nur, wenn die Datei auf einer
 // eigenen Adresse liegt (z. B. GitHub Pages) – in Claude-Artefakten blockiert der Browser Google Maps.
-const CONFIG = { googleMapsApiKey: "" };
+const CONFIG = { googleMapsApiKey: "AIzaSyCiHYSlkaIB0YS8cFnCw7OIeYaxT1FyEhY" };
 </script>
 <script>
 // ============================================================
@@ -878,6 +878,8 @@ function initMap(){
     el.insertAdjacentHTML('beforeend',`<div class="mapnote">Vereinfachte Karte · Google Maps mit API-Schlüssel</div>`);
     addLegend(el); MAP.set(mapState()); };
   if(!CONFIG.googleMapsApiKey) return fallback();
+  // Schlüssel ungültig oder Adresse nicht freigegeben -> einfache Karte statt grauer Fehlerkarte
+  window.gm_authFailure=()=>{ console.warn('Google Maps: Schlüssel abgelehnt – einfache Karte aktiv'); MAP=null; el.innerHTML=''; fallback(); };
   const to=setTimeout(fallback,6000);
   window.__gmInit=()=>{ clearTimeout(to); if(MAP) return; try{ MAP=new GMap(el,onPoint); addLegend(el); MAP.set(mapState()); }catch(e){ fallback(); } };
   const s=document.createElement('script'); s.async=true; s.onerror=()=>{clearTimeout(to);fallback();};
