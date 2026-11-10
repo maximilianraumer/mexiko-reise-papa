@@ -71,6 +71,7 @@ body.v-day main{grid-template-columns:40% 60%}
 .map-ui button:hover{background:#fff}
 .legend{position:absolute;left:12px;bottom:12px;z-index:3;display:flex;gap:12px;align-items:center;padding:6px 10px;border-radius:9px;background:rgba(251,250,247,.92);border:1px solid var(--line);font-size:11px;color:var(--ink2)}
 .legend span{display:flex;align-items:center;gap:5px}
+#map.gm .legend{bottom:auto;top:12px}
 .legend i{display:inline-block;width:18px;height:0;border-top:2px solid var(--accent)}
 .legend i.f{border-top:2px dashed #8d8579}
 .legend i.b{border-top:2px dotted #6c8a9b}
@@ -813,7 +814,7 @@ const GSTYLE=[{elementType:'geometry',stylers:[{color:'#f3f1ec'}]},{elementType:
  {featureType:'water',elementType:'geometry',stylers:[{color:'#dfe6e8'}]},{featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#93a0a5'}]},
  {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},{featureType:'road.highway',elementType:'geometry',stylers:[{color:'#e9e4da'}]},{featureType:'road',elementType:'labels.icon',stylers:[{visibility:'off'}]},
  {featureType:'poi',stylers:[{visibility:'off'}]},{featureType:'poi.park',elementType:'geometry',stylers:[{visibility:'on'},{color:'#e5e9df'}]},{featureType:'transit',stylers:[{visibility:'off'}]},
- {featureType:'administrative',elementType:'geometry.stroke',stylers:[{color:'#c8c2b6'}]},{featureType:'landscape.natural.terrain',stylers:[{visibility:'simplified'}]}];
+ {featureType:'administrative',elementType:'geometry.stroke',stylers:[{color:'#c8c2b6'}]},{featureType:'administrative.province',elementType:'labels',stylers:[{visibility:'off'}]},{featureType:'administrative.neighborhood',elementType:'labels',stylers:[{visibility:'off'}]},{featureType:'landscape.natural.terrain',stylers:[{visibility:'simplified'}]}];
 class GMap{
   constructor(el, cb){
     this.cb=cb; this.mk=[]; this.ln=[];
@@ -879,9 +880,9 @@ function initMap(){
     addLegend(el); MAP.set(mapState()); };
   if(!CONFIG.googleMapsApiKey) return fallback();
   // Schlüssel ungültig oder Adresse nicht freigegeben -> einfache Karte statt grauer Fehlerkarte
-  window.gm_authFailure=()=>{ console.warn('Google Maps: Schlüssel abgelehnt – einfache Karte aktiv'); MAP=null; el.innerHTML=''; fallback(); };
+  window.gm_authFailure=()=>{ console.warn('Google Maps: Schlüssel abgelehnt – einfache Karte aktiv'); MAP=null; el.innerHTML=''; el.classList.remove('gm'); fallback(); };
   const to=setTimeout(fallback,6000);
-  window.__gmInit=()=>{ clearTimeout(to); if(MAP) return; try{ MAP=new GMap(el,onPoint); addLegend(el); MAP.set(mapState()); }catch(e){ fallback(); } };
+  window.__gmInit=()=>{ clearTimeout(to); if(MAP) return; try{ MAP=new GMap(el,onPoint); el.classList.add('gm'); addLegend(el); MAP.set(mapState()); }catch(e){ fallback(); } };
   const s=document.createElement('script'); s.async=true; s.onerror=()=>{clearTimeout(to);fallback();};
   s.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(CONFIG.googleMapsApiKey)+'&callback=__gmInit&loading=async';
   document.head.appendChild(s);
