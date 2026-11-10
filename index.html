@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>México · Dezember 2026</title>
+<meta name="theme-color" content="#f5f3ee">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mexiko-Reise">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -160,6 +167,25 @@ a.stat:hover{border-color:var(--line2)}
 .filters{display:flex;gap:6px;margin:18px 0 0}
 .filters button{font:500 12.5px Inter;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--ink2);cursor:pointer}
 .filters button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+/* day info */
+.facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:18px}
+.fact{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.fact .k{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+.fact .k svg.i{width:14px;height:14px}
+.fact .v{font:400 19px/1.25 Fraunces,serif;margin-top:3px;font-variant-numeric:tabular-nums}
+.fact .s{font-size:11.5px;color:var(--ink2);margin-top:2px;line-height:1.35}
+.climnote{font-size:12.5px;color:var(--ink2);margin:8px 2px 0}
+.legrow .t small{white-space:normal}
+.legrow .rt{font-size:12px;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;font-weight:500}
+.legrow .rt svg.i{width:13px;height:13px}
+.cost{display:flex;justify-content:space-between;gap:12px;padding:9px 14px;border-top:1px solid var(--line);font-size:13px}
+.cost:first-child{border-top:0}
+.cost span:last-child{color:var(--ink);font-weight:500;white-space:nowrap}
+.hint{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);color:#2f4741;border-radius:var(--r);padding:12px 14px;margin-top:16px;font-size:13px}
+.hint b{font-weight:600}
+.hint button{margin-left:auto;background:none;border:0;color:inherit;cursor:pointer;padding:0 0 0 8px;opacity:.6}
+.foot{margin-top:28px;font-size:11.5px;color:var(--muted)}
+.pill.off{background:var(--open-bg);border-color:transparent;color:#7c5219}
 /* sheet */
 .sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center}
 .sheet[hidden]{display:none}
@@ -197,6 +223,11 @@ a.stat:hover{border-color:var(--line2)}
   .sheet-card{width:100%;border-radius:18px 18px 0 0;max-height:88vh;animation:up .25s ease}
   .pill.hide-m{display:none}
   .mapnote{display:none}
+  .facts{grid-template-columns:repeat(3,1fr);gap:8px}
+  .fact{padding:9px 10px}
+  .fact .v{font-size:15px;white-space:nowrap}
+  .fact .s{display:none}
+  .fact .k{font-size:10.5px}
   .row .t b{white-space:normal;line-height:1.3}
   .map-ui.zoom button[data-z="in"],.map-ui.zoom button[data-z="out"]{display:none}
   .legend{gap:9px;padding:4px 8px;font-size:10.5px;left:8px;bottom:8px}
@@ -238,6 +269,20 @@ const TRIP = {
   subtitle: "Max & Papa · 06.–22. Dezember",
   start: "2026-12-06",
   end: "2026-12-22",
+  updated: "2026-11-10",   // Datenstand (wird in der App angezeigt)
+};
+
+// Klima-Richtwerte Dezember (langjährige Mittel, gerundet; Quellen: weatheronthisday/NOAA, weatherapi.com,
+// climatestotravel, seatemperature.net/.info, currentresults). Keine Wettervorhersage!
+// sun = Ort für Sonnenauf-/untergang, tz = UTC-Versatz (Mexiko ohne Sommerzeit; Baja California Sur = UTC−7)
+const CLIMATE = {
+  cdmx:{name:"Mexico City", hi:"21", lo:"7", note:"2.240 m Höhe – morgens und abends kühl, Jacke einpacken", sun:[19.4326,-99.1332], tz:-6},
+  oax:{name:"Oaxaca", hi:"23–26", lo:"9–11", note:"ca. 1.550 m Höhe – Nächte frisch", sun:[17.0606,-96.7253], tz:-6},
+  pxm:{name:"Puerto Escondido", hi:"29", lo:"22", sea:"28", note:"Tropisch warm, starke UV-Strahlung", sun:[15.8617,-97.0697], tz:-6},
+  cabo:{name:"Los Cabos", hi:"26", lo:"15", sea:"24–25", note:"Trocken, Wale ab Dezember möglich", sun:[23.0607,-109.6970], tz:-7},
+  pacific:{name:"Todos Santos / Cerritos", hi:"25", lo:"17", sea:"24", note:"Pazifikseite: kräftige Brandung, abends windig", sun:[23.4460,-110.2260], tz:-7},
+  lapaz:{name:"La Paz", hi:"25", lo:"13", sea:"23–24", note:"Dezember ist windig (Nordwind) – Bootstouren können ausfallen", sun:[24.1590,-110.3150], tz:-7},
+  mty:{name:"Monterrey", hi:"21", lo:"10", sun:[25.6866,-100.3161], tz:-6},
 };
 
 // [lat, lng, Name, Google-Maps-Suchbegriff]
@@ -310,19 +355,19 @@ const HUBS = [
 
 // Wege: flight | bus | car | boat ; pts = Ortsschlüssel oder [lat,lng]
 const LEGS = [
-  {id:"L1", type:"flight", day:"2026-12-06", pts:["mty_ap","mex_ap"], label:"Flug MTY → MEX (Max)"},
-  {id:"L13",type:"bus",    day:"2026-12-08", pts:["cdmx",[19.55,-98.98],"teo"], label:"Bus nach Teotihuacán"},
-  {id:"L2", type:"flight", day:"2026-12-10", pts:["nlu","oax_ap"], label:"Flug NLU → OAX"},
-  {id:"L14",type:"car",    day:"2026-12-12", pts:["oax","tule","mitla","matatlan"], label:"Tagestour Valles Centrales"},
-  {id:"L3", type:"bus",    day:"2026-12-13", pts:["ado_oax",[16.70,-96.78],[16.25,-96.98],"pxm"], label:"ADO-Bus Oaxaca → Puerto Escondido"},
-  {id:"L4", type:"flight", day:"2026-12-15", pts:["pxm_ap","sjd_ap"], label:"Flug PXM → SJD"},
-  {id:"L5", type:"car",    day:"2026-12-16", pts:["sjd_ap","santiago","laribera","pulmo"], label:"MEX 1 nach Cabo Pulmo"},
-  {id:"L6", type:"car",    day:"2026-12-17", pts:["pulmo","laribera","santiago","sjd",[22.96,-109.80],"csl",[23.02,-110.06],[23.17,-110.13],"cerritos"], label:"Cabo Pulmo → Cabo San Lucas → Cerritos"},
-  {id:"L7", type:"car",    day:"2026-12-18", pts:["cerritos","todos"], label:"Cerritos → Todos Santos"},
-  {id:"L8", type:"car",    day:"2026-12-19", pts:["todos",[23.70,-110.25],[23.95,-110.27],"lapaz"], label:"MEX 19 nach La Paz"},
-  {id:"L9", type:"boat",   day:"2026-12-20", pts:["lapaz",[24.32,-110.36],"espiritu"], label:"Boot Isla Espíritu Santo"},
-  {id:"L11",type:"flight", day:"2026-12-21", pts:["lap_ap","mty_ap"], label:"Flug LAP → MTY (Max)"},
-  {id:"L12",type:"flight", day:"2026-12-21", pts:["lap_ap","mex_ap"], label:"Flug LAP → MEX (Papa)"},
+  {id:"L1", dur:"1:34 Std. (08:16–09:50)", type:"flight", day:"2026-12-06", pts:["mty_ap","mex_ap"], label:"Flug MTY → MEX (Max)"},
+  {id:"L13", dur:"ca. 1 Std. pro Strecke",type:"bus",    day:"2026-12-08", pts:["cdmx",[19.55,-98.98],"teo"], label:"Bus nach Teotihuacán"},
+  {id:"L2", dur:"1:10 Std. (18:06–19:16) · vorher 60–90 Min. zum Flughafen NLU", type:"flight", day:"2026-12-10", pts:["nlu","oax_ap"], label:"Flug NLU → OAX"},
+  {id:"L14", dur:"Tule ca. 45 Min. · Mitla +1 Std. · Hierve el Agua +1 Std. (optional)",type:"car",    day:"2026-12-12", pts:["oax","tule","mitla","matatlan"], label:"Tagestour Valles Centrales"},
+  {id:"L3", dur:"laut Plan ca. 4 Std. (07:15–ca. 11:00) – Ticket prüfen", type:"bus",    day:"2026-12-13", pts:["ado_oax",[16.70,-96.78],[16.25,-96.98],"pxm"], label:"ADO-Bus Oaxaca → Puerto Escondido"},
+  {id:"L4", dur:"14:17–18:34 Ortszeit, 1 Zwischenstopp", type:"flight", day:"2026-12-15", pts:["pxm_ap","sjd_ap"], label:"Flug PXM → SJD"},
+  {id:"L5", dur:"ca. 2 Std. über MEX 1 (Santiago, La Ribera)", type:"car",    day:"2026-12-16", pts:["sjd_ap","santiago","laribera","pulmo"], label:"MEX 1 nach Cabo Pulmo"},
+  {id:"L6", dur:"Cabo Pulmo → San José ca. 2 Std. · → Cabo San Lucas ca. 40 Min. · → Cerritos ca. 1 Std.", type:"car",    day:"2026-12-17", pts:["pulmo","laribera","santiago","sjd",[22.96,-109.80],"csl",[23.02,-110.06],[23.17,-110.13],"cerritos"], label:"Cabo Pulmo → Cabo San Lucas → Cerritos"},
+  {id:"L7", dur:"15–20 Min.", type:"car",    day:"2026-12-18", pts:["cerritos","todos"], label:"Cerritos → Todos Santos"},
+  {id:"L8", dur:"ca. 1:30 Std. über MEX 19", type:"car",    day:"2026-12-19", pts:["todos",[23.70,-110.25],[23.95,-110.27],"lapaz"], label:"MEX 19 nach La Paz"},
+  {id:"L9", dur:"Tour 08:00–15:30 inkl. Hoteltransfer", type:"boat",   day:"2026-12-20", pts:["lapaz",[24.32,-110.36],"espiritu"], label:"Boot Isla Espíritu Santo"},
+  {id:"L11", dur:"Zeiten prüfen (21./22.12.)",type:"flight", day:"2026-12-21", pts:["lap_ap","mty_ap"], label:"Flug LAP → MTY (Max)"},
+  {id:"L12", dur:"noch offen",type:"flight", day:"2026-12-21", pts:["lap_ap","mex_ap"], label:"Flug LAP → MEX (Papa)"},
 ];
 
 // Buchungen: kind flight | bus | car | hotel | activity
@@ -338,7 +383,7 @@ const BOOKINGS = {
     date:"2026-12-10", time:"18:06 – 19:16", from:"nlu", to:"oax_ap",
     link:"https://www.booking.com/flight-Ys0Xw0FmVg",
     info:["Person 1: persönlicher Gegenstand, Handgepäck (8 kg), Aufgabegepäck (32 kg)","Person 2: nur persönlicher Gegenstand","Abflug ab NLU (Felipe Ángeles), nicht AICM"]},
-  "bus-oax-pxm":{kind:"bus", status:"offen", title:"ADO-Bus Oaxaca → Puerto Escondido", who:"Max & Papa",
+  "bus-oax-pxm":{cost:"ca. 21 € p. P.", kind:"bus", status:"offen", title:"ADO-Bus Oaxaca → Puerto Escondido", who:"Max & Papa",
     date:"2026-12-13", time:"07:15 – ca. 11:00", from:"ado_oax", to:"pxm",
     info:["Ca. 21 € p. P.","Terminal in der Ticket-Bestätigung prüfen","Fahrzeit laut Ticket prüfen"]},
   "fl-pxm-sjd":{kind:"flight", status:"gebucht", title:"Flug Puerto Escondido → Los Cabos", who:"Max & Papa",
@@ -381,11 +426,11 @@ const BOOKINGS = {
     deadlines:[{d:"2026-12-11",t:"Kostenlose Stornierung bis 23:59"}]},
   "h-pulmo":{kind:"hotel", status:"offen", title:"Unterkunft Cabo Pulmo", where:"pulmo",
     date:"2026-12-16", until:"2026-12-17", time:"16.12. – 17.12. · 1 Nacht", info:["Noch zu buchen"]},
-  "h-cerritos":{kind:"hotel", status:"offen", title:"Cerritos Baja Eco", where:"cerritos",
+  "h-cerritos":{cost:"ca. 94 €", kind:"hotel", status:"offen", title:"Cerritos Baja Eco", where:"cerritos",
     date:"2026-12-17", until:"2026-12-18", time:"17.12. – 18.12. · 1 Nacht", info:["Geplant, ca. 94 €","Letztes Stück der Zufahrt unbefestigt"]},
   "h-todos":{kind:"hotel", status:"offen", title:"Hotel Todos Santos", where:"todos",
     date:"2026-12-18", until:"2026-12-19", time:"18.12. – 19.12. · 1 Nacht", info:["Noch zu buchen"]},
-  "h-lapaz":{kind:"hotel", status:"offen", title:"Hotel La Paz", where:"lapaz",
+  "h-lapaz":{cost:"100–135 € pro Nacht (Richtwert)", kind:"hotel", status:"offen", title:"Hotel La Paz", where:"lapaz",
     date:"2026-12-19", until:"2026-12-21", time:"19.12. – 21.12. · 2 Nächte", info:["Richtwert 100–135 € pro Nacht","Check-in meist ab 15 Uhr"]},
   "h-mty":{kind:"hotel", status:"pruefen", title:"Hotel Monterrey", where:"mty",
     date:"2026-12-21", until:"2026-12-22", time:"21.12. – 22.12. · 1 Nacht", info:["Hotel noch unklar","Gepäckaufbewahrung abwarten"]},
@@ -394,10 +439,10 @@ const BOOKINGS = {
   "a-tour-oax":{kind:"activity", status:"offen", title:"Tagestour Tule · Mitla · Matatlán", date:"2026-12-12", where:"mitla", info:["Gruppentour oder Taxi für den Tag","Einige Tage vorher buchen"]},
   "a-boot-pxm":{kind:"activity", status:"offen", title:"Bootstour Delfine & Schildkröten", date:"2026-12-14", where:"pxm", info:["Ab Playa Principal, ca. 3 Std.","Früh buchen, Preis vorher aushandeln"]},
   "a-snorkel":{kind:"activity", status:"offen", title:"Schnorcheltour Cabo Pulmo", date:"2026-12-17", where:"pulmo", info:["Geführt, ca. 2–2,5 Std.","Am Vortag vorab buchen","Plan B bei Wetter: Wanderung in Santiago (ca. 80 USD p. P.)"]},
-  "a-arco":{kind:"activity", status:"offen", title:"Bootstour El Arco (Alpha Tours)", date:"2026-12-17", where:"csl", info:["Dock A, ca. 25 USD p. P., ca. 1 Std.","Boote fahren nur bis ca. 16 Uhr – vorab reservieren"]},
-  "a-surf":{kind:"activity", status:"offen", title:"Surfstunde Siempre Mar", date:"2026-12-18", where:"cerritos", info:["Ab 950 MXN, Preis verhandelbar"]},
-  "a-balandra":{kind:"activity", status:"offen", title:"Playa Balandra (Eintritt)", date:"2026-12-19", where:"balandra", info:["125 MXN p. P.","Nur online buchbar, Kontingent begrenzt"]},
-  "a-espiritu":{kind:"activity", status:"offen", title:"Isla Espíritu Santo (FunBaja)", date:"2026-12-20", where:"espiritu", info:["2.500 MXN p. P. inkl. Lunch und Hoteltransfer","Unbedingt vorab buchen"]},
+  "a-arco":{cost:"ca. 25 USD p. P.", kind:"activity", status:"offen", title:"Bootstour El Arco (Alpha Tours)", date:"2026-12-17", where:"csl", info:["Dock A, ca. 25 USD p. P., ca. 1 Std.","Boote fahren nur bis ca. 16 Uhr – vorab reservieren"]},
+  "a-surf":{cost:"ab 950 MXN", kind:"activity", status:"offen", title:"Surfstunde Siempre Mar", date:"2026-12-18", where:"cerritos", info:["Ab 950 MXN, Preis verhandelbar"]},
+  "a-balandra":{cost:"125 MXN p. P.", kind:"activity", status:"offen", title:"Playa Balandra (Eintritt)", date:"2026-12-19", where:"balandra", info:["125 MXN p. P.","Nur online buchbar, Kontingent begrenzt"]},
+  "a-espiritu":{cost:"2.500 MXN p. P. inkl. Lunch", kind:"activity", status:"offen", title:"Isla Espíritu Santo (FunBaja)", date:"2026-12-20", where:"espiritu", info:["2.500 MXN p. P. inkl. Lunch und Hoteltransfer","Unbedingt vorab buchen"]},
 };
 
 const STAGES = [
@@ -410,15 +455,15 @@ const STAGES = [
 
 // Tage: items = [Zeit, Titel, Hinweis, Ort, Buchung]
 const DAYS = [
- {date:"2026-12-06", stage:"cdmx", title:"Anreise Mexico City", sleep:"h-cdmx", legs:["L1"], items:[
+ {date:"2026-12-06", clim:"cdmx", stage:"cdmx", title:"Anreise Mexico City", sleep:"h-cdmx", legs:["L1"], items:[
    ["08:16","Flug Monterrey → Mexico City","Ankunft 09:50","mex_ap","fl-mty-mex"],
    ["Mittags","Check-in Apartment","Gepäckaufbewahrung möglich","cdmx","h-cdmx"],
    ["Abends","Entspannt einleben, Essen in der Nähe",null,"roma"]]},
- {date:"2026-12-07", stage:"cdmx", title:"Papa kommt an", sleep:"h-cdmx", items:[
+ {date:"2026-12-07", clim:"cdmx", stage:"cdmx", title:"Papa kommt an", sleep:"h-cdmx", items:[
    ["Tagsüber","Ruhiger Tag, Viertel erkunden",null,"roma"],
    ["Abends","Papa landet in Mexico City","Flugdaten fehlen noch","mex_ap","fl-papa-in"],
    ["20:00","Abendessen in Roma Norte / Condesa",null,"roma"]]},
- {date:"2026-12-08", stage:"cdmx", title:"Teotihuacán & Centro Histórico", sleep:"h-cdmx", legs:["L13"], items:[
+ {date:"2026-12-08", clim:"cdmx", stage:"cdmx", title:"Teotihuacán & Centro Histórico", sleep:"h-cdmx", legs:["L13"], items:[
    ["08:00","Bus nach Teotihuacán","Anlage öffnet 9:00 – früh los. Sonnencreme, Wasser, Mütze","teo"],
    ["Bis 13:30","Sonnen- & Mondpyramide, Calzada de los Muertos","Mittagessen in La Gruta, Rückfahrt ca. 15:00","teo"],
    ["Ab 15:00","Palacio Nacional (Diego-Rivera-Wandbilder)","Reisepass mitnehmen, schließt ca. 17:00","palacio"],
@@ -427,12 +472,12 @@ const DAYS = [
    ["Danach","Paseo de la Reforma, Ángel de la Independencia","Zwischen den Stationen ggf. Uber","angel"],
    ["Ab 20:30","Abendessen & Mariachi, Plaza Garibaldi","Auf Taschen und Wertsachen achten","garibaldi"]],
    sug:["Der Tag ist sehr dicht. Vorschlag: Reforma & Ángel auf den 10.12. morgens verschieben – liegt direkt auf dem Weg zum Chapultepec-Park."]},
- {date:"2026-12-09", stage:"cdmx", title:"Xochimilco, Coyoacán & San Ángel", sleep:"h-cdmx", items:[
+ {date:"2026-12-09", clim:"cdmx", stage:"cdmx", title:"Xochimilco, Coyoacán & San Ángel", sleep:"h-cdmx", items:[
    ["08:30","Trajinera-Fahrt in Xochimilco (1,5–2 Std.)","Embarcadero Nuevo Nativitas, Preis vorher aushandeln","xochi"],
    ["Ab 12:00","Coyoacán: Mercado, Plaza Hidalgo, Mittagessen","Frida-Kahlo-Museum nur mit Ticket","coyo","a-frida"],
    ["Ab 15:30","San Ángel: Plaza San Jacinto, Altstadtgassen","Uber ab Coyoacán ca. 10 Min.","sanangel"],
    ["Abends","Freier Abend, Essen in Roma / Condesa",null,"roma"]]},
- {date:"2026-12-10", stage:"oax", title:"Chapultepec & Flug nach Oaxaca", sleep:"h-oax", legs:["L2"], items:[
+ {date:"2026-12-10", clim:"oax", stage:"oax", title:"Chapultepec & Flug nach Oaxaca", sleep:"h-oax", legs:["L2"], items:[
    ["09:00","Chapultepec-Park & Museo Nacional de Antropología","Bis ca. 12:30","antro"],
    ["13:00","Mittagessen in Polanco, Gepäck abholen",null,"polanco"],
    ["15:00","Fahrt zum Flughafen NLU (AIFA)","Direktbus 60–90 Min., online einchecken","nlu"],
@@ -440,14 +485,14 @@ const DAYS = [
    ["Ca. 19:30","Uber ins Centro (ca. 30 Min.), Check-in",null,"oax","h-oax"],
    ["Abends","Abendessen, Spaziergang über den Zócalo",null,"oax"]],
    sug:["Falls Reforma vom 08.12. hierher wandert: 8:15 Start am Ángel, ca. 2 km zu Fuß bis zum Museum."]},
- {date:"2026-12-11", stage:"oax", title:"Monte Albán & Oaxaca Centro", sleep:"h-oax", items:[
+ {date:"2026-12-11", clim:"oax", stage:"oax", title:"Monte Albán & Oaxaca Centro", sleep:"h-oax", items:[
    ["08:30","Monte Albán","Shuttle/Taxi ca. 25 Min., ca. 2 Std. vor Ort","montealban"],
    ["Ab 12:30","Mercado 20 de Noviembre & Benito Juárez","Rauchgasse, Tlayudas, Mole","mercado"],
    ["15:00","Templo Santo Domingo de Guzmán","Kulturmuseum optional, Eintritt separat","stodomingo"],
    ["Ca. 17:00","García Vigil & Macedonio Alcalá","Cafés, Schokolade, Läden","alcala"],
    ["Sonnenuntergang","Zócalo & Kathedrale",null,"oax"],
    ["Abends","Abendessen und Mezcal-Bar",null,"oax"]]},
- {date:"2026-12-12", stage:"oax", title:"Tule, Mitla & Mezcal", sleep:"h-oax", legs:["L14"], items:[
+ {date:"2026-12-12", clim:"oax", stage:"oax", title:"Tule, Mitla & Mezcal", sleep:"h-oax", legs:["L14"], items:[
    ["08:00","Abfahrt Richtung Osten","Gruppentour oder Taxi für den Tag","oax","a-tour-oax"],
    ["08:45","Santa María del Tule – Frühstück & 2000 Jahre alte Zypresse",null,"tule"],
    ["10:30","Mitla – Ruinen mit Steinmosaiken","Ca. 1 Std.","mitla"],
@@ -455,27 +500,27 @@ const DAYS = [
    ["Optional","Hierve el Agua","Ca. 1 Std. ab Mitla, Rückkehr dann ca. 18:00","hierve"],
    ["Abends","Letztes Abendessen, Gepäck packen",null,"oax"]],
    sug:["12.12. ist der Tag der Virgen de Guadalupe: Prozessionen und Feuerwerk, aber auch mehr Verkehr – Fahrer mit fester Abholzeit statt spontanem Uber.","Hierve el Agua war in den letzten Jahren zeitweise gesperrt – vorher prüfen, ob geöffnet."]},
- {date:"2026-12-13", stage:"pxm", title:"Bus an die Pazifikküste", sleep:"h-pxm", legs:["L3"], items:[
+ {date:"2026-12-13", clim:"pxm", stage:"pxm", title:"Bus an die Pazifikküste", sleep:"h-pxm", legs:["L3"], items:[
    ["06:30","Uber zum ADO-Terminal","Terminal in der Bestätigung prüfen","ado_oax"],
    ["07:15","ADO-Bus nach Puerto Escondido","Fahrzeit laut Ticket prüfen","ado_oax","bus-oax-pxm"],
    ["Ca. 11:00","Ankunft, Taxi zur Unterkunft, Gepäck abstellen","Check-in meist ab 14–15 Uhr","pxm","h-pxm"],
    ["Mittags","Ceviche an der Playa Principal / Marinero",null,"pxm"],
    ["Ab 14:00","Playa Carrizalillo – ruhige Badebucht","Zicatela hat zum Schwimmen zu starke Wellen","carrizalillo"],
-   ["Ca. 17:45","Sonnenuntergang Zicatela, Surfer beobachten","„Mexican Pipeline“","zicatela"],
+   ["Ca. 17:55","Sonnenuntergang Zicatela, Surfer beobachten","„Mexican Pipeline“","zicatela"],
    ["Abends","Abendessen in La Punta, danach Adoquín",null,"lapunta"]]},
- {date:"2026-12-14", stage:"pxm", title:"Delfine, Surfen & Strand", sleep:"h-pxm", items:[
+ {date:"2026-12-14", clim:"pxm", stage:"pxm", title:"Delfine, Surfen & Strand", sleep:"h-pxm", items:[
    ["07:30","Bootstour: Delfine, Schildkröten, Küste (ca. 3 Std.)","Ab Playa Principal, Sonnencreme","pxm","a-boot-pxm"],
    ["Mittags","Mittagessen, Pause",null,"pxm"],
    ["Nachmittags","Surfstunde (La Punta/Carrizalillo) oder Playa Bacocho","Zicatela nur für Fortgeschrittene","bacocho"],
    ["Sonnenuntergang","Zicatela oder La Punta",null,"lapunta"],
    ["Abends","Letzter Abend auf dem Adoquín",null,"adoquin"]]},
- {date:"2026-12-15", stage:"baja", title:"Flug nach Baja California Sur", sleep:"h-sjd", legs:["L4"], items:[
+ {date:"2026-12-15", clim:"cabo", stage:"baja", title:"Flug nach Baja California Sur", sleep:"h-sjd", legs:["L4"], items:[
    ["Morgens","Frühstück, letztes Bad, Koffer packen",null,"carrizalillo"],
    ["11:30","Taxi zum Flughafen (ca. 15 Min.)","Online-Check-in","pxm_ap"],
    ["14:17","Flug Puerto Escondido → San José del Cabo","1 Zwischenstopp, Landung 18:34 Ortszeit (−1 Std.)","pxm_ap","fl-pxm-sjd"],
    ["Abends","Check-in MariaMar Suites, Abendessen",null,"costaazul","h-sjd"]],
    sug:["Mietwagen schon bei Ankunft am Flughafen SJD übernehmen statt am 16.12. – spart Uber-Fahrten und den Weg zurück zum Flughafen, kostet aber einen Miettag mehr."]},
- {date:"2026-12-16", stage:"baja", title:"Start Roadtrip · Cabo Pulmo", sleep:"h-pulmo", legs:["L5"], items:[
+ {date:"2026-12-16", clim:"cabo", stage:"baja", title:"Start Roadtrip · Cabo Pulmo", sleep:"h-pulmo", legs:["L5"], items:[
    ["08:30","Frühstück, Playa Costa Azul, Check-out","Gepäck mitnehmen","costaazul"],
    ["Ca. 10:15","Centro Histórico San José del Cabo","Plaza Mijares, Mission, Kunstviertel","sjd"],
    ["12:30","Mietwagen am Flughafen SJD abholen","Komplettschutz, Fotos vom Auto","sjd_ap","car-baja"],
@@ -484,7 +529,7 @@ const DAYS = [
    ["Ca. 15:30","Ankunft Cabo Pulmo, Unterkunft, Strand","Schnorcheltour für morgen buchen","pulmo","h-pulmo"],
    ["Abends","Sonnenuntergang (ca. 17:35), Abendessen im Dorf",null,"pulmo"]],
    sug:["Bargeld (MXN) schon in San José abheben – in Cabo Pulmo gibt es keinen verlässlichen Geldautomaten und wenig Kartenzahlung."]},
- {date:"2026-12-17", stage:"baja", title:"Schnorcheln, El Arco & Pazifik", sleep:"h-cerritos", legs:["L6"], items:[
+ {date:"2026-12-17", clim:"pacific", stage:"baja", title:"Schnorcheln, El Arco & Pazifik", sleep:"h-cerritos", legs:["L6"], items:[
    ["08:30","Schnorcheltour Nationalpark Cabo Pulmo","Riff, Fischschwärme, mit Glück Schildkröten","pulmo","a-snorkel"],
    ["11:15","Fahrt über La Ribera & Santiago nach San José (ca. 2 Std.)","Vorher tanken","santiago"],
    ["Ca. 13:15","Mittagessen in San José del Cabo",null,"sjd"],
@@ -492,7 +537,7 @@ const DAYS = [
    ["15:00","Bootstour El Arco: Pelican Rock, Seelöwen, Playa del Amor","Buckelwale ab Dezember möglich","arco","a-arco"],
    ["16:15","MEX 19 nach Cerritos (ca. 1 Std., km 67)","Aus Richtung Cabo erst wenden, dann rechts","cerritos"],
    ["Ca. 17:15","Sonnenuntergang am Pazifik (ca. 17:35)",null,"cerritos","h-cerritos"]]},
- {date:"2026-12-18", stage:"baja", title:"Surfen & Todos Santos", sleep:"h-todos", legs:["L7"], items:[
+ {date:"2026-12-18", clim:"pacific", stage:"baja", title:"Surfen & Todos Santos", sleep:"h-todos", legs:["L7"], items:[
    ["09:00","Anfänger-Surfstunde Playa Los Cerritos","Siempre Mar Surf School","cerritos","a-surf"],
    ["12:00","Check-out, Fahrt nach Todos Santos (15–20 Min.)","Mittagessen, Hotel","todos","h-todos"],
    ["13:30","Pueblo Mágico: Plaza, Kirche, Galerien (ca. 2 Std.)",null,"todos"],
@@ -500,24 +545,24 @@ const DAYS = [
    ["Ca. 17:00","Freilassung der Schildkröten-Babys, Sonnenuntergang","Kostenlos, Spende willkommen – Termin vorher prüfen","tortugas"],
    ["Abends","Abendessen in Todos Santos",null,"todos"]],
    sug:["2 Nächte in Cerritos statt Hotelwechsel: Todos Santos ist nur 15–20 Min. entfernt – ein Check-out weniger, Abendessen trotzdem in Todos Santos."]},
- {date:"2026-12-19", stage:"baja", title:"La Paz & Playa Balandra", sleep:"h-lapaz", legs:["L8"], items:[
+ {date:"2026-12-19", clim:"lapaz", stage:"baja", title:"La Paz & Playa Balandra", sleep:"h-lapaz", legs:["L8"], items:[
    ["09:00","Frühstück, Check-out, Fahrt nach La Paz (ca. 1:30 Std.)","Vorher tanken","todos"],
    ["Ca. 11:00","Hotel La Paz, Gepäck abgeben","Check-in meist ab 15 Uhr","lapaz","h-lapaz"],
    ["13:00","Playa Balandra","Nur online buchbar, 30–40 Min. ab Stadt","balandra","a-balandra"],
    ["Ca. 16:00","Playa Tecolote – Getränke am Strand",null,"tecolote"],
    ["Abends","Malecón: Promenade, Sonnenuntergang, Abendessen",null,"lapaz"]]},
- {date:"2026-12-20", stage:"baja", title:"Isla Espíritu Santo", sleep:"h-lapaz", legs:["L9"], items:[
+ {date:"2026-12-20", clim:"lapaz", stage:"baja", title:"Isla Espíritu Santo", sleep:"h-lapaz", legs:["L9"], items:[
    ["08:00–15:30","Bootstour: Seelöwen bei Los Islotes, Ensenada Grande","FunBaja, Transfer vom Hotel","espiritu","a-espiritu"],
    ["Nachmittags","Hotel, Pause",null,"lapaz"],
    ["Abends","Abendessen am Malecón","Plan B bei Nordwind: Kathedrale, Jardín Velasco, Mercado Municipal","lapaz"]],
    sug:["Bei Nordwind fallen Bootstouren aus – Tour mit Umbuchungsoption buchen, dann notfalls mit Balandra (19.12.) tauschen."]},
- {date:"2026-12-21", stage:"home", title:"Abschied · Rückflüge", sleep:"h-mty", legs:["L11","L12"], items:[
+ {date:"2026-12-21", clim:"lapaz", stage:"home", title:"Abschied · Rückflüge", sleep:"h-mty", legs:["L11","L12"], items:[
    ["Morgens","Frühstück, Check-out","Auto vollgetankt","lapaz"],
    ["12:30","Mietwagen-Rückgabe La Paz","Fotos vom Auto, Kaution freigeben","lap_ap","car-baja"],
    ["Offen","Max: Flug La Paz → Monterrey","Datum prüfen (21./22.12.)","lap_ap","fl-lap-mty"],
    ["Offen","Papa: Flug La Paz → Mexico City","Noch nicht hinterlegt","lap_ap","fl-papa-out"],
    ["Abends","Max: Hotel Monterrey","Hotel noch unklar","mty","h-mty"]]},
- {date:"2026-12-22", stage:"home", title:"Ende der Reise", items:[
+ {date:"2026-12-22", clim:"mty", stage:"home", title:"Ende der Reise", items:[
    ["Morgens","Check-out Monterrey","Abhängig vom Rückflugdatum","mty","h-mty"]]},
 ];
 
@@ -556,9 +601,28 @@ const I = {
   alert:'<path d="M12 3.5 21.5 20h-19z"/><path d="M12 10v4.5M12 17.2v.01"/>',
   chev:'<path d="m9 6 6 6-6 6"/>', left:'<path d="m15 6-6 6 6 6"/>',
   x:'<path d="M6 6l12 12M18 6 6 18"/>', home:'<path d="M3 11l9-7 9 7v9H3z"/>', list:'<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/>',
+  temp:'<path d="M10 4a2 2 0 1 1 4 0v9.5a4 4 0 1 1-4 0z"/><path d="M12 9v6"/>',
+  wave:'<path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 19c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M12 4v5M9.5 6.5 12 9l2.5-2.5"/>',
+  route:'<circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h7a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h7"/>',
+  wallet:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 14.5h2"/>',
+  phone:'<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
   plus:'<path d="M12 5v14M5 12h14"/>', minus:'<path d="M5 12h14"/>', reset:'<path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v4h4"/>'
 };
 const ico = (n, cls='') => `<svg class="i ${cls}" viewBox="0 0 24 24">${I[n]}</svg>`;
+// Sonnenauf-/untergang (NOAA-Näherung, ±2 Min.)
+function sunTimes(iso, lat, lng, tz){
+  const [y,m,d]=iso.split('-').map(Number), R=Math.PI/180;
+  const n=Math.round(Date.UTC(y,m-1,d,12)/86400000+2440587.5-2451545.0+0.0008);
+  const J=n-lng/360, M=(357.5291+0.98560028*J)%360;
+  const C=1.9148*Math.sin(M*R)+0.02*Math.sin(2*M*R)+0.0003*Math.sin(3*M*R);
+  const L=(M+C+180+102.9372)%360;
+  const Jt=2451545.0+J+0.0053*Math.sin(M*R)-0.0069*Math.sin(2*L*R);
+  const dec=Math.asin(Math.sin(L*R)*Math.sin(23.4397*R));
+  const w=Math.acos((Math.sin(-0.833*R)-Math.sin(lat*R)*Math.sin(dec))/(Math.cos(lat*R)*Math.cos(dec)))/R;
+  const f=jd=>{ const t=new Date((jd-2440587.5)*86400000+tz*3600000); return String(t.getUTCHours()).padStart(2,'0')+':'+String(t.getUTCMinutes()).padStart(2,'0'); };
+  return {rise:f(Jt-w/360), set:f(Jt+w/360)};
+}
 const KIND = {flight:'Flug', bus:'Bus', car:'Mietwagen', hotel:'Unterkunft', activity:'Aktivität'};
 const STL = {gebucht:'Gebucht', offen:'Offen', pruefen:'Prüfen'};
 const stLabel = b => b.kind==='activity' && b.status==='offen' ? (b.optional?'Optional buchen':'Vorab buchen') : STL[b.status];
@@ -587,7 +651,9 @@ function header(){
   $('#t-title').textContent = TRIP.title;
   $('#t-sub').textContent = TRIP.subtitle;
   const s = daysFrom(TRIP.start), e = daysFrom(TRIP.end);
-  $('#t-pill').innerHTML = s>0 ? `Abflug in <b>${s} ${s===1?'Tag':'Tagen'}</b>` : e>=0 ? `<b>Tag ${curIdx+1}</b> von ${tripLen}` : 'Reise abgeschlossen';
+  const pill=$('#t-pill'); pill.classList.toggle('off', navigator.onLine===false);
+  if(navigator.onLine===false){ pill.innerHTML='Offline'; return; }
+  pill.innerHTML = s>0 ? `Abflug in <b>${s} ${s===1?'Tag':'Tagen'}</b>` : e>=0 ? `<b>Tag ${curIdx+1}</b> von ${tripLen}` : 'Reise abgeschlossen';
 }
 function nav(view, arg){
   let h = `<a class="wide ${view==='overview'?'on':''}" href="#uebersicht">${ico('home')}Übersicht</a><span class="sep"></span>`;
@@ -619,6 +685,7 @@ function vOverview(){
   if(dl.length){
     h += `<h3 class="sec">Anstehende Fristen</h3><div class="list">` + dl.map(x=>`<button class="row dl" data-b="${x.id}"><span class="when">${dShort(x.d)}</span><span class="t"><b>${esc(x.b.title)}</b><small>${esc(x.t)}</small></span><span class="rem">${remTxt(daysFrom(x.d))}</span></button>`).join('') + `</div>`;
   }
+  if(showInstallHint()) h += `<div class="hint" id="installhint">${ico('phone')}<span><b>Offline nutzen:</b> In Safari auf <b>Teilen</b> → <b>„Zum Home-Bildschirm“</b>. Danach funktionieren Plan und Buchungen auch ohne Netz (einmal online öffnen).</span><button data-hidehint aria-label="Ausblenden">${ico('x')}</button></div>`;
   h += `<h3 class="sec">Reiseverlauf</h3>`;
   STAGES.forEach(st=>{
     const ds = DAYS.filter(d=>d.stage===st.id); if(!ds.length) return;
@@ -629,7 +696,14 @@ function vOverview(){
     });
     h += `</div>`;
   });
+  h += `<p class="foot">Datenstand ${dShort(TRIP.updated)}${TRIP.updated.slice(0,4)}${navigator.onLine===false?' · offline gespeicherte Version':''}</p>`;
   return h;
+}
+function isStandalone(){ try{ return window.navigator.standalone===true || matchMedia('(display-mode: standalone)').matches; }catch(e){ return false; } }
+function showInstallHint(){
+  if(isStandalone()) return false;
+  try{ if(localStorage.getItem('hideInstallHint')) return false; }catch(e){}
+  return /iPhone|iPad|Android/i.test(navigator.userAgent);
 }
 
 function dayPlaces(day){
@@ -643,6 +717,7 @@ function vDay(i){
     <a class="navbtn ${prev?'':'off'}" href="${prev?'#tag-'+dd(prev.date):'#'}" aria-label="Vorheriger Tag">${ico('left')}</a>
     <div class="mid"><div class="eyebrow">Tag ${i+1} von ${tripLen} · ${esc(st.name)}</div><h2 class="big">${esc(d.title)}</h2><p class="lead">${dLong(d.date)}</p></div>
     <a class="navbtn ${next?'':'off'}" href="${next?'#tag-'+dd(next.date):'#'}" aria-label="Nächster Tag">${ico('chev')}</a></div>`;
+  h += dayFacts(d);
   const bs = dayBookings(d);
   if(bs.length){
     h += `<div class="cards">` + bs.map(id=>{const b=BOOKINGS[id]; return `<button class="card" data-b="${id}"><span class="h"><span class="kind">${ico(b.kind)}${KIND[b.kind]}</span>${badge(b)}</span><b>${esc(b.title)}</b><small>${esc(b.time||'')}</small></button>`}).join('') + `</div>`;
@@ -658,7 +733,40 @@ function vDay(i){
   });
   h += `</ol>`;
   (d.sug||[]).forEach(s=>{ h += `<div class="sug">${ico('bulb')}<p><b>Vorschlag:</b> ${esc(s)}</p></div>`; });
+  h += dayTravel(d) + dayCosts(d);
   return h;
+}
+function dayFacts(d){
+  const c = CLIMATE[d.clim]; if(!c) return '';
+  const st = sunTimes(d.date, c.sun[0], c.sun[1], c.tz);
+  let h = `<div class="facts">
+    <div class="fact"><div class="k">${ico('sun')}Sonne · ${esc(c.name)}</div><div class="v">${st.rise} – ${st.set}</div><div class="s">Auf- und Untergang, Ortszeit (UTC${c.tz})</div></div>
+    <div class="fact"><div class="k">${ico('temp')}Klima Dezember</div><div class="v">${c.hi}° / ${c.lo}°</div><div class="s">Ø Tageshöchst- / Tiefstwert</div></div>`;
+  if(c.sea) h += `<div class="fact"><div class="k">${ico('wave')}Wassertemperatur</div><div class="v">${c.sea}°</div><div class="s">Ø im Dezember</div></div>`;
+  h += `</div>`;
+  if(c.note) h += `<p class="climnote">${esc(c.note)}. Langjährige Mittelwerte, keine Vorhersage.</p>`;
+  return h;
+}
+function routeUrl(l){
+  const named = l.pts.filter(p=>typeof p==='string');
+  if(named.length<2) return null;
+  const q=id=>encodeURIComponent(P(id)[3]);
+  let u='https://www.google.com/maps/dir/?api=1&origin='+q(named[0])+'&destination='+q(named[named.length-1])+'&travelmode='+(l.type==='bus'?'transit':'driving');
+  const mid=named.slice(1,-1); if(mid.length) u+='&waypoints='+mid.map(q).join('%7C');
+  return u;
+}
+function dayTravel(d){
+  const legs = LEGS.filter(l=>l.day===d.date); if(!legs.length) return '';
+  return `<h3 class="sec">Unterwegs</h3><div class="list">` + legs.map(l=>{
+    const u = (l.type==='car'||l.type==='bus') ? routeUrl(l) : null;
+    const k = l.type==='car'?'car':l.type==='boat'?'boat':l.type==='bus'?'bus':'flight';
+    return `<div class="row legrow"><span class="ico">${ico(k)}</span><span class="t"><b>${esc(l.label)}</b><small>${esc(l.dur||'')}</small></span>${u?`<a class="rt" href="${u}" target="_blank" rel="noopener">${ico('route')}Route</a>`:''}</div>`;
+  }).join('') + `</div>`;
+}
+function dayCosts(d){
+  const ids = dayBookings(d).filter(id=>BOOKINGS[id].cost);
+  if(!ids.length) return '';
+  return `<h3 class="sec">Bekannte Kosten</h3><div class="list">` + ids.map(id=>`<div class="cost"><span>${esc(BOOKINGS[id].title)}</span><span>${esc(BOOKINGS[id].cost)}</span></div>`).join('') + `</div>`;
 }
 
 let filter = 'alle';
@@ -690,6 +798,7 @@ function openSheet(id){
   if(b.from) kv.push(['Von', P(b.from)[2]]);
   if(b.to) kv.push(['Nach', P(b.to)[2]]);
   if(b.where) kv.push(['Ort', P(b.where)[2]]);
+  if(b.cost) kv.push(['Preis', b.cost]);
   (b.deadlines||[]).forEach(x=>kv.push(['Frist '+dShort(x.d), x.t]));
   const dayI = DAYIDX[b.date];
   let h = `<button class="x" data-close aria-label="Schließen">${ico('x')}</button>
@@ -712,6 +821,7 @@ function closeSheet(){ $('#sheet').hidden = true; }
 document.addEventListener('click', e=>{
   const c = e.target.closest('[data-close]'); if(c){ closeSheet(); if(c.tagName!=='A') return; }
   const b = e.target.closest('[data-b]'); if(b){ e.preventDefault(); openSheet(b.dataset.b); return; }
+  if(e.target.closest('[data-hidehint]')){ try{localStorage.setItem('hideInstallHint','1');}catch(_){ } const hEl=document.getElementById('installhint'); if(hEl) hEl.remove(); return; }
   const f = e.target.closest('[data-f]'); if(f){ filter=f.dataset.f; $('#content').innerHTML=vBookings(); return; }
   const li = e.target.closest('.timeline li[data-p]'); if(li && !e.target.closest('a,button')){ highlight(li.dataset.p, true); }
 });
@@ -875,8 +985,8 @@ function highlight(id, fromList){
 }
 function initMap(){
   const el=$('#map');
-  const fallback=()=>{ if(MAP) return; MAP=new SvgMap(el,onPoint);
-    el.insertAdjacentHTML('beforeend',`<div class="mapnote">Vereinfachte Karte · Google Maps mit API-Schlüssel</div>`);
+  const fallback=()=>{ if(MAP) return; if(typeof d3==='undefined'||typeof topojson==='undefined'){ el.insertAdjacentHTML('beforeend','<div class="mapnote">Karte gerade nicht verfügbar</div>'); return; } MAP=new SvgMap(el,onPoint);
+    el.insertAdjacentHTML('beforeend',`<div class="mapnote">${navigator.onLine===false?'Offline · vereinfachte Karte':'Vereinfachte Karte'}</div>`);
     addLegend(el); MAP.set(mapState()); };
   if(!CONFIG.googleMapsApiKey) return fallback();
   // Schlüssel ungültig oder Adresse nicht freigegeben -> einfache Karte statt grauer Fehlerkarte
@@ -901,6 +1011,10 @@ function route(){
   if(MAP) MAP.set(mapState());
 }
 window.addEventListener('hashchange',route);
+window.addEventListener('offline',()=>{ header(); if(MAP instanceof GMap){ const el=$('#map'); MAP=null; el.innerHTML=''; el.classList.remove('gm');
+  MAP=new SvgMap(el,onPoint); el.insertAdjacentHTML('beforeend',`<div class="mapnote">Offline · vereinfachte Karte</div>`); addLegend(el); MAP.set(mapState()); } });
+window.addEventListener('online',header);
+try{ if('serviceWorker' in navigator && ((location.protocol==='https:' && /github\.io$/.test(location.hostname)) || location.hostname==='localhost')) navigator.serviceWorker.register('./sw.js').catch(()=>{}); }catch(e){}
 header(); route(); initMap();
 })();
 </script>
