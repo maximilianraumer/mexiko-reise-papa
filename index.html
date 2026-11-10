@@ -54,12 +54,19 @@ body.v-day main{grid-template-columns:40% 60%}
 .land{fill:var(--land2);stroke:var(--border);stroke-width:.6;vector-effect:non-scaling-stroke}
 .land.mx{fill:var(--land)}
 .route{fill:none;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
-.route.flight{stroke:#8d8579;stroke-width:1.5;stroke-dasharray:5 5}
-.route.bus,.route.car{stroke:var(--accent);stroke-width:2.2}
+.route.flight{stroke:#6f6b63;stroke-width:1.6}
+.route.bus,.route.car{stroke:#b8643c;stroke-width:2.6;opacity:.5}
+.route.routed{opacity:.95}
 .route.boat{stroke:#6c8a9b;stroke-width:1.8;stroke-dasharray:1.5 4.5}
 .route.dim{opacity:.22}
-.route.hi.flight{stroke:var(--ink);stroke-width:2}
-.route.hi.bus,.route.hi.car{stroke-width:3}
+.route.hi.flight{stroke:var(--ink);stroke-width:2.2}
+.plane path{fill:#fff;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round;pointer-events:none}
+.plane.dim{opacity:.3}
+.pt.tip circle.dot{display:none}
+.pt .star{display:none}
+.pt.tip .star{display:block;fill:#d39b3a;stroke:#fff;stroke-width:1.5}
+.pt.tip text.lb{opacity:0}.pt.tip.on text.lb{opacity:1}
+.route.hi.bus,.route.hi.car{stroke-width:3.4}
 .pt{cursor:pointer}
 .pt circle.halo{fill:rgba(63,93,85,.14);stroke:none;opacity:0;transition:opacity .2s}
 .pt.on circle.halo{opacity:1}
@@ -79,8 +86,9 @@ body.v-day main{grid-template-columns:40% 60%}
 .legend{position:absolute;left:12px;bottom:12px;z-index:3;display:flex;gap:12px;align-items:center;padding:6px 10px;border-radius:9px;background:rgba(251,250,247,.92);border:1px solid var(--line);font-size:11px;color:var(--ink2)}
 .legend span{display:flex;align-items:center;gap:5px}
 #map.gm .legend{bottom:auto;top:12px}
-.legend i{display:inline-block;width:18px;height:0;border-top:2px solid var(--accent)}
-.legend i.f{border-top:2px dashed #8d8579}
+.legend i{display:inline-block;width:18px;height:0;border-top:2.5px solid #b8643c}
+.legend svg.lp{width:15px;height:15px;fill:#fff;stroke:var(--ink);stroke-width:1.8}
+.legend svg.ls{width:13px;height:13px;fill:#d39b3a}
 .legend i.b{border-top:2px dotted #6c8a9b}
 .mapnote{position:absolute;left:12px;top:12px;z-index:3;font-size:11px;color:var(--muted);background:rgba(251,250,247,.92);border:1px solid var(--line);padding:4px 9px;border-radius:8px;max-width:60%}
 .pop{position:absolute;z-index:4;background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:9px 11px;font-size:12.5px;box-shadow:0 6px 24px rgba(30,28,24,.12);transform:translate(-50%,calc(-100% - 14px));min-width:150px;max-width:230px}
@@ -186,6 +194,15 @@ a.stat:hover{border-color:var(--line2)}
 .hint button{margin-left:auto;background:none;border:0;color:inherit;cursor:pointer;padding:0 0 0 8px;opacity:.6}
 .foot{margin-top:28px;font-size:11.5px;color:var(--muted)}
 .pill.off{background:var(--open-bg);border-color:transparent;color:#7c5219}
+.tipcard{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;margin-top:14px;padding:13px 15px;border-radius:var(--r);border:1px solid #ecd9b8;background:#faf3e6}
+.tipcard:hover{background:#f7eedb}
+.tipcard .tk{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#a8742a;font-weight:600}
+.tipcard .tk svg.i{width:14px;height:14px;fill:#d39b3a;stroke:#d39b3a}
+.tipcard b{font:500 17px/1.3 Fraunces,serif}
+.tipcard .tt{font-size:13px;color:var(--ink2)}
+.tipcard .tm{display:flex;align-items:center;gap:2px;font-size:12px;color:#a8742a;font-weight:500;margin-top:2px}
+.tipcard .tm svg.i{width:13px;height:13px}
+.legrow small.km{color:var(--accent);margin-top:1px}
 /* sheet */
 .sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center}
 .sheet[hidden]{display:none}
@@ -338,6 +355,15 @@ const PLACES = {
   tecolote:[24.3360,-110.3160,"Playa El Tecolote","Playa El Tecolote, La Paz"],
   espiritu:[24.5600,-110.3900,"Isla Espíritu Santo","Isla Espíritu Santo"],
   lap_ap:[24.0727,-110.3625,"Flughafen La Paz (LAP)","Aeropuerto Internacional de La Paz"],
+  // Geheimtipps
+  anahuacalli:[19.3237,-99.1449,"Museo Anahuacalli","Museo Diego Rivera Anahuacalli"],
+  yagul:[16.9573,-96.4636,"Yagul","Zona Arqueológica de Yagul"],
+  manialtepec:[15.9360,-97.2050,"Laguna de Manialtepec","Laguna de Manialtepec"],
+  estero:[23.0492,-109.6809,"Estero San José","Estero San José del Cabo"],
+  zorra:[23.4520,-109.8250,"Cañón de la Zorra (Sol de Mayo)","Rancho Ecológico Sol de Mayo"],
+  arbolitos:[23.3960,-109.4270,"Playa Los Arbolitos","Playa Los Arbolitos, Cabo Pulmo"],
+  puntalobos:[23.4190,-110.2385,"Playa Punta Lobos","Playa Punta Lobos, Todos Santos"],
+  walhai:[24.1900,-110.3750,"Walhai-Zone Bahía de La Paz","Tiburón ballena La Paz tour"],
 };
 
 // Etappen der Übersichtskarte (beschriftete Hauptorte)
@@ -453,6 +479,52 @@ const STAGES = [
   {id:"home", name:"Rückreise", range:"21.–22.12."},
 ];
 
+// Geheimtipps (recherchiert, Quellen verlinkt)
+const TIPS = [
+ {id:"t-cdmx", day:"2026-12-09", place:"anahuacalli", where:"Mexico City", title:"Museo Anahuacalli – Diego Riveras Steintempel",
+  short:"Im Frida-Kahlo-Ticket schon bezahlt – und fast niemand geht hin.",
+  text:"Diego Rivera ließ diesen tempelartigen Bau aus dunklem Vulkangestein für seine Sammlung präkolumbischer Kunst errichten. Der Eintritt ist im offiziellen Frida-Kahlo-Ticket enthalten und bleibt nach dem Besuch der Casa Azul ein Jahr gültig – viele Besucher erfahren das nie. Ruhig, kaum Gruppen, ca. 15 Min. per Uber von Coyoacán.",
+  when:"09.12. nach Coyoacán, vor San Ángel", dur:"ca. 1 Std.", cost:"im Frida-Kahlo-Ticket enthalten",
+  src:"https://www.civitatis.com/en/mexico-city/frida-kahlo-diego-rivera-anahuacalli-museums-ticket"},
+ {id:"t-oax", day:"2026-12-12", place:"yagul", where:"Oaxaca", title:"Yagul – Zapotekenstadt ohne Menschenmassen",
+  short:"Liegt direkt an eurer Route zwischen Tule und Mitla – oft ist man fast allein.",
+  text:"Zapotekische Festungsstadt auf einem Kakteenhügel, ca. 1,5 km abseits der Straße nach Mitla. Größter Ballspielplatz im Tal von Oaxaca, das Labyrinth des „Palasts der sechs Höfe“ und oben auf der Fortaleza ein weiter Blick über Mezcal-Felder. Zusammen mit den Höhlen bei Mitla UNESCO-Welterbe – und trotzdem kaum besucht.",
+  when:"12.12. zwischen Tule und Mitla", dur:"ca. 1–1,5 Std.", warn:"Öffnungszeiten vorher prüfen (Feiertag 12.12.)",
+  src:"https://mexiconewsdaily.com/culture/discover-the-ruins-of-yagul-a-hidden-gem-of-zapotec-history"},
+ {id:"t-pxm", day:"2026-12-13", place:"manialtepec", where:"Puerto Escondido", title:"Leuchtendes Plankton in der Laguna de Manialtepec",
+  short:"Nachts im Mangrovensee schwimmen, jede Bewegung leuchtet.",
+  text:"Ca. 25 Min. westlich liegt eine Mangrovenlagune, in der Biolumineszenz-Plankton bei jeder Berührung aufleuchtet – mit dem Boot hinaus und selbst hineinspringen. Entscheidend ist Dunkelheit: Am 09.12. ist Neumond, am 13./14.12. ist die Mondsichel noch schmal – beste Bedingungen. Touren mit Hotelabholung ca. 19:30–22:00.",
+  when:"13.12. abends (alternativ 14.12.)", dur:"ca. 2,5 Std.", cost:"je nach Anbieter, vorab vergleichen",
+  warn:"Badesachen & Wechselkleidung mitnehmen; Fotos zeigen das Leuchten oft übertrieben",
+  src:"https://www.civitatis.com/en/puerto-escondido/night-tour-manialtepec-lagoon"},
+ {id:"t-sjd", day:"2026-12-16", place:"estero", where:"San José del Cabo", title:"Estero San José – Vogelparadies neben der Hotelzone",
+  short:"Süßwasser-Oase, wo der Fluss ins Meer mündet – direkt bei eurem Hotel.",
+  text:"Seit 1944 geschütztes Feuchtgebiet zwischen Hotelzone und Altstadt: Reiher, Pelikane und Fischadler im Schilf, Palmen und Lagune statt Resort-Kulisse. Perfekt als ruhiger Morgenspaziergang von der Playa Costa Azul in Richtung Plaza Mijares.",
+  when:"16.12. morgens vor dem Check-out", dur:"ca. 45–60 Min.", cost:"frei", warn:"Feste Schuhe statt Flip-Flops",
+  src:"https://clubsolaris.com/blog/estuary-in-san-jose-del-cabo"},
+ {id:"t-zorra", day:"2026-12-16", place:"zorra", where:"Santiago (East Cape)", title:"Cañón de la Zorra – Wasserfall mitten in der Wüste",
+  short:"12 m Wasserfall mit grünem Badebecken, direkt hinter Santiago.",
+  text:"Im Biosphärenreservat Sierra de la Laguna stürzt ein Wasserfall in ein jadegrünes Becken – zwischen Kakteen und Granitfelsen. Zugang über die Rancho Ecológico Sol de Mayo, ca. 25 Min. hinter Santiago, dann kurzer, steiniger Abstieg. Baden ausdrücklich erlaubt.",
+  when:"16.12. auf dem Weg nach Cabo Pulmo (Abzweig in Santiago)", dur:"+1,5–2 Std. inkl. Umweg", cost:"250 MXN p. P., geöffnet 9–18 Uhr, kein Alkohol",
+  src:"https://www.visitloscabos.travel/blog/post/how-to-find-the-internets-favorite-cabo-waterfall/"},
+ {id:"t-pulmo", day:"2026-12-16", place:"arbolitos", where:"Cabo Pulmo", title:"Riff vom Strand aus: Los Arbolitos & La Sirenita",
+  short:"Schnorcheln ohne Boot – das Korallenriff beginnt wenige Meter vor dem Strand.",
+  text:"Ca. 5 km südlich des Dorfs (holprige Piste, mit dem Mietwagen machbar) liegt Los Arbolitos, wo das einzige lebende Korallenriff des Golfs von Kalifornien direkt am Strand beginnt. Von dort ca. 20 Min. Fußweg zur fast leeren Playa La Sirenita. Ideal für den Nachmittag nach der Ankunft – die Bootstour am 17.12. ist dann die Kür.",
+  when:"16.12. nachmittags (ruhiges Wetter)", dur:"2–3 Std.", cost:"kleine Strandgebühr; Ausrüstung im Ort leihen", warn:"Bei Wind auf Los Frailes ausweichen; kein Geldautomat in Cabo Pulmo",
+  src:"https://www.moontravelguides.com/travel/outdoors/cabo-pulmo-diving-and-snorkeling/"},
+ {id:"t-todos", day:"2026-12-18", place:"puntalobos", where:"Todos Santos", title:"Punta Lobos: Fischer „surfen“ ihre Boote an Land",
+  short:"Nachmittags jagen die Pangas mit Vollgas durch die Brandung auf den Strand.",
+  text:"Todos Santos hat keinen Hafen – die Fischer der örtlichen Kooperativen landen deshalb direkt am Strand von Punta Lobos, 3 km südlich des Orts, und fahren ihre Boote mit Schwung durch die Wellen auf den Sand. Ein Schauspiel, das kaum ein Tourist sieht – und der Fisch wird direkt vom Boot verkauft.",
+  when:"18.12. zwischen Ortsbummel und Schildkrötencamp", dur:"ca. 1 Std.", cost:"frei",
+  src:"https://tosea.net/category/blog/page/12/"},
+ {id:"t-lapaz", day:"2026-12-21", place:"walhai", where:"La Paz", title:"Mit Walhaien schnorcheln in der Bucht von La Paz",
+  short:"Riesige, harmlose Planktonfresser – direkt vor der Stadt.",
+  text:"Im Winter sammeln sich junge Walhaie in der Bucht von La Paz. In streng regulierten Zeitfenstern darf man an der Oberfläche mit ihnen schnorcheln (Abstand halten, nicht tauchen). Die beste Zeit ist Dezember bis März. Kurze Touren von 2–3 Std. passen am 21.12. früh vor die Autorückgabe – oder am 19.12. vor Balandra.",
+  when:"21.12. früh (oder 19.12. vormittags)", dur:"2–3 Std.", cost:"ca. 80–150 USD p. P.",
+  warn:"Touren werden ausgesetzt, wenn zu wenige Tiere da sind – kurz vorher beim Anbieter prüfen. Keine Sonnencreme im Wasser.",
+  src:"https://thebetterbeyond.com/whale-shark-swimming-la-paz/"},
+];
+
 // Tage: items = [Zeit, Titel, Hinweis, Ort, Buchung]
 const DAYS = [
  {date:"2026-12-06", clim:"cdmx", stage:"cdmx", title:"Anreise Mexico City", sleep:"h-cdmx", legs:["L1"], items:[
@@ -476,7 +548,8 @@ const DAYS = [
    ["08:30","Trajinera-Fahrt in Xochimilco (1,5–2 Std.)","Embarcadero Nuevo Nativitas, Preis vorher aushandeln","xochi"],
    ["Ab 12:00","Coyoacán: Mercado, Plaza Hidalgo, Mittagessen","Frida-Kahlo-Museum nur mit Ticket","coyo","a-frida"],
    ["Ab 15:30","San Ángel: Plaza San Jacinto, Altstadtgassen","Uber ab Coyoacán ca. 10 Min.","sanangel"],
-   ["Abends","Freier Abend, Essen in Roma / Condesa",null,"roma"]]},
+   ["Abends","Freier Abend, Essen in Roma / Condesa",null,"roma"]],
+   sug:["Xochimilco ruhiger erleben: statt Nativitas am Embarcadero Cuemanco starten – Öko-Route durch die Chinampas mit Axolotl-Schutzstation statt Party-Booten."]},
  {date:"2026-12-10", clim:"oax", stage:"oax", title:"Chapultepec & Flug nach Oaxaca", sleep:"h-oax", legs:["L2"], items:[
    ["09:00","Chapultepec-Park & Museo Nacional de Antropología","Bis ca. 12:30","antro"],
    ["13:00","Mittagessen in Polanco, Gepäck abholen",null,"polanco"],
@@ -601,6 +674,7 @@ const I = {
   alert:'<path d="M12 3.5 21.5 20h-19z"/><path d="M12 10v4.5M12 17.2v.01"/>',
   chev:'<path d="m9 6 6 6-6 6"/>', left:'<path d="m15 6-6 6 6 6"/>',
   x:'<path d="M6 6l12 12M18 6 6 18"/>', home:'<path d="M3 11l9-7 9 7v9H3z"/>', list:'<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+  star:'<path d="M12 3.5l2.6 5.5 6 .7-4.4 4.1 1.1 6-5.3-3-5.3 3 1.1-6-4.4-4.1 6-.7z"/>',
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/>',
   temp:'<path d="M10 4a2 2 0 1 1 4 0v9.5a4 4 0 1 1-4 0z"/><path d="M12 9v6"/>',
   wave:'<path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 19c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M12 4v5M9.5 6.5 12 9l2.5-2.5"/>',
@@ -686,6 +760,7 @@ function vOverview(){
     h += `<h3 class="sec">Anstehende Fristen</h3><div class="list">` + dl.map(x=>`<button class="row dl" data-b="${x.id}"><span class="when">${dShort(x.d)}</span><span class="t"><b>${esc(x.b.title)}</b><small>${esc(x.t)}</small></span><span class="rem">${remTxt(daysFrom(x.d))}</span></button>`).join('') + `</div>`;
   }
   if(showInstallHint()) h += `<div class="hint" id="installhint">${ico('phone')}<span><b>Offline nutzen:</b> In Safari auf <b>Teilen</b> → <b>„Zum Home-Bildschirm“</b>. Danach funktionieren Plan und Buchungen auch ohne Netz (einmal online öffnen).</span><button data-hidehint aria-label="Ausblenden">${ico('x')}</button></div>`;
+  h += `<h3 class="sec">Geheimtipps · ${TIPS.length}</h3><div class="list">` + TIPS.map(t=>`<button class="row" data-tip="${t.id}"><span class="ico" style="color:#c48a2c">${ico('star')}</span><span class="t"><b>${esc(t.title)}</b><small>${esc(t.where)} · ${dShort(t.day)}</small></span>${ico('chev','chev')}</button>`).join('') + `</div>`;
   h += `<h3 class="sec">Reiseverlauf</h3>`;
   STAGES.forEach(st=>{
     const ds = DAYS.filter(d=>d.stage===st.id); if(!ds.length) return;
@@ -732,9 +807,24 @@ function vDay(i){
       + `</div></div></li>`;
   });
   h += `</ol>`;
+  TIPS.filter(t=>t.day===d.date).forEach(t=>{ h += tipCard(t); });
   (d.sug||[]).forEach(s=>{ h += `<div class="sug">${ico('bulb')}<p><b>Vorschlag:</b> ${esc(s)}</p></div>`; });
   h += dayTravel(d) + dayCosts(d);
   return h;
+}
+function tipCard(t){
+  return `<button class="tipcard" data-tip="${t.id}"><span class="tk">${ico('star')}Geheimtipp · ${esc(t.where)}</span><b>${esc(t.title)}</b><span class="tt">${esc(t.short)}</span><span class="tm">${esc(t.when)} · Details ${ico('chev')}</span></button>`;
+}
+function openTip(id){
+  const t=TIPS.find(x=>x.id===id); if(!t) return;
+  $('#sheet-card').innerHTML = `<button class="x" data-close aria-label="Schließen">${ico('x')}</button>
+    <div class="eyebrow" style="display:flex;gap:6px;align-items:center;color:#a8742a">${ico('star')}Geheimtipp · ${esc(t.where)}</div>
+    <h2>${esc(t.title)}</h2>
+    <p style="margin:10px 0 0;color:var(--ink2);font-size:14px;line-height:1.55">${esc(t.text)}</p>
+    <dl class="kv">${[['Wann',t.when],['Kosten',t.cost],['Dauer',t.dur]].filter(x=>x[1]).map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+    ${t.warn?`<div class="warn">${ico('alert')}<span>${esc(t.warn)}</span></div>`:''}
+    <div class="btns"><a class="btn primary" href="${gq(t.place)}" target="_blank" rel="noopener">${ico('pin')}In Google Maps</a>${t.src?`<a class="btn" href="${esc(t.src)}" target="_blank" rel="noopener">Quelle ${ico('ext')}</a>`:''}<a class="btn" href="#tag-${dd(t.day)}" data-close>Zum Tag ${dShort(t.day)}</a></div>`;
+  $('#sheet').hidden=false;
 }
 function dayFacts(d){
   const c = CLIMATE[d.clim]; if(!c) return '';
@@ -760,7 +850,8 @@ function dayTravel(d){
   return `<h3 class="sec">Unterwegs</h3><div class="list">` + legs.map(l=>{
     const u = (l.type==='car'||l.type==='bus') ? routeUrl(l) : null;
     const k = l.type==='car'?'car':l.type==='boat'?'boat':l.type==='bus'?'bus':'flight';
-    return `<div class="row legrow"><span class="ico">${ico(k)}</span><span class="t"><b>${esc(l.label)}</b><small>${esc(l.dur||'')}</small></span>${u?`<a class="rt" href="${u}" target="_blank" rel="noopener">${ico('route')}Route</a>`:''}</div>`;
+    const rk = (l.type==='car'||l.type==='bus') ? `<small class="km" data-rk='${JSON.stringify(legRoadPts(l))}'></small>` : '';
+    return `<div class="row legrow"><span class="ico">${ico(k)}</span><span class="t"><b>${esc(l.label)}</b><small>${esc(l.dur||'')}</small>${rk}</span>${u?`<a class="rt" href="${u}" target="_blank" rel="noopener">${ico('route')}Route</a>`:''}</div>`;
   }).join('') + `</div>`;
 }
 function dayCosts(d){
@@ -820,12 +911,70 @@ function openSheet(id){
 function closeSheet(){ $('#sheet').hidden = true; }
 document.addEventListener('click', e=>{
   const c = e.target.closest('[data-close]'); if(c){ closeSheet(); if(c.tagName!=='A') return; }
+  const tp = e.target.closest('[data-tip]'); if(tp){ e.preventDefault(); openTip(tp.dataset.tip); return; }
   const b = e.target.closest('[data-b]'); if(b){ e.preventDefault(); openSheet(b.dataset.b); return; }
   if(e.target.closest('[data-hidehint]')){ try{localStorage.setItem('hideInstallHint','1');}catch(_){ } const hEl=document.getElementById('installhint'); if(hEl) hEl.remove(); return; }
   const f = e.target.closest('[data-f]'); if(f){ filter=f.dataset.f; $('#content').innerHTML=vBookings(); return; }
   const li = e.target.closest('.timeline li[data-p]'); if(li && !e.target.closest('a,button')){ highlight(li.dataset.p, true); }
 });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSheet(); });
+
+/* ---------- Routen-Geometrie ---------- */
+// Comic-Flugzeug, Nase zeigt nach oben (-y), Mittelpunkt 0,0
+const PLANE='M0,-11 C2.3,-11 3.2,-8.5 3.2,-6 L3.2,-2.2 L11,2.2 C12.4,3 12.2,5.2 10.6,5 L3.2,3.6 L2.6,8.2 L5.6,10.2 C6.5,10.8 6.1,12.3 5,12.1 L0,11.2 L-5,12.1 C-6.1,12.3 -6.5,10.8 -5.6,10.2 L-2.6,8.2 L-3.2,3.6 L-10.6,5 C-12.2,5.2 -12.4,3 -11,2.2 L-3.2,-2.2 L-3.2,-6 C-3.2,-8.5 -2.3,-11 0,-11 Z';
+const STAR='M0,-9 L2.6,-3 L9,-2.8 L4,1.3 L5.6,7.6 L0,4.1 L-5.6,7.6 L-4,1.3 L-9,-2.8 L-2.6,-3 Z';
+const ROAD='#b8643c';
+const merc=lat=>Math.log(Math.tan(Math.PI/4+lat*Math.PI/360));
+const imerc=y=>(2*Math.atan(Math.exp(y))-Math.PI/2)*180/Math.PI;
+// leicht gebogener Bogen zwischen zwei Punkten (in Mercator gerechnet, damit er auf der Karte gleichmäßig aussieht)
+function arcPoints(a,b,k=.14,n=48){
+  const A=[a[1],merc(a[0])*180/Math.PI], B=[b[1],merc(b[0])*180/Math.PI];
+  const dx=B[0]-A[0], dy=B[1]-A[1], C=[(A[0]+B[0])/2+dy*k, (A[1]+B[1])/2-dx*k];
+  const out=[]; for(let i=0;i<=n;i++){ const t=i/n, u=1-t;
+    const x=u*u*A[0]+2*u*t*C[0]+t*t*B[0], y=u*u*A[1]+2*u*t*C[1]+t*t*B[1];
+    out.push([imerc(y*Math.PI/180), x]); }
+  return out;
+}
+function rdp(pts,eps){ if(pts.length<3) return pts; const [a,b]=[pts[0],pts[pts.length-1]]; let im=0,dm=0;
+  for(let i=1;i<pts.length-1;i++){ const p=pts[i]; const d=Math.abs((b[1]-a[1])*(a[0]-p[0])-(a[1]-p[1])*(b[0]-a[0]))/(Math.hypot(b[0]-a[0],b[1]-a[1])||1e-9); if(d>dm){dm=d;im=i;} }
+  return dm>eps ? rdp(pts.slice(0,im+1),eps).slice(0,-1).concat(rdp(pts.slice(im),eps)) : [a,b]; }
+const distKm=(a,b)=>{ const R=6371, r=Math.PI/180, dl=(b[0]-a[0])*r, dg=(b[1]-a[1])*r;
+  const h=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dg/2)**2; return 2*R*Math.asin(Math.sqrt(h)); };
+// Straßenrouten über OSRM (OpenStreetMap), einmal geladen und im Gerät gespeichert (auch offline verfügbar)
+const ROUTER={
+  mem:{}, q:[], busy:false, pend:new Set(),
+  key(pts){ return 'rt1:'+pts.map(p=>p[0].toFixed(4)+','+p[1].toFixed(4)).join(';'); },
+  get(pts){ const k=this.key(pts); if(this.mem[k]) return this.mem[k];
+    try{ const v=localStorage.getItem(k); if(v) return this.mem[k]=JSON.parse(v); }catch(e){} return null; },
+  want(pts){ if(pts.length<2) return; const k=this.key(pts); if(this.get(pts)||this.pend.has(k)) return; this.pend.add(k); this.q.push(pts); this.pump(); },
+  async pump(){ if(this.busy) return; this.busy=true;
+    while(this.q.length){ const pts=this.q.shift(), k=this.key(pts);
+      try{
+        const url='https://router.project-osrm.org/route/v1/driving/'+pts.map(p=>p[1].toFixed(5)+','+p[0].toFixed(5)).join(';')+'?overview=full&geometries=geojson';
+        const r=await fetch(url); const j=await r.json();
+        if(j.code==='Ok'&&j.routes&&j.routes[0]){ const g=j.routes[0];
+          const v={c:rdp(g.geometry.coordinates.map(c=>[+c[1].toFixed(5),+c[0].toFixed(5)]),.0002), km:Math.round(g.distance/1000), min:Math.round(g.duration/60)};
+          this.mem[k]=v; try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){}
+          routesUpdated(); }
+      }catch(e){ /* offline oder Dienst nicht erreichbar -> vereinfachte Linie bleibt */ }
+      this.pend.delete(k); await new Promise(r=>setTimeout(r,1100)); }
+    this.busy=false; }
+};
+let _ru=null;
+function routesUpdated(){ clearTimeout(_ru); _ru=setTimeout(()=>{ if(MAP) MAP.set(mapState(),true); fillRouteKm(); },250); }
+function legRoadPts(l){ return l.pts.filter(p=>typeof p==='string').map(ll); }
+// Tagesroute: Orte des Tages in Reihenfolge, getrennt an Flügen/Bootsfahrten (Sprünge > 250 km oder Insel)
+function daySegments(d){
+  const pl=dayPlaces(d).filter(id=>id!=='espiritu').map(id=>({id,ll:ll(id)}));
+  const segs=[]; let cur=[];
+  pl.forEach((p,i)=>{ if(i&&distKm(pl[i-1].ll,p.ll)>250){ if(cur.length>1) segs.push(cur); cur=[]; } cur.push(p); });
+  if(cur.length>1) segs.push(cur);
+  return segs.map(sg=>sg.map(p=>p.ll));
+}
+function fillRouteKm(){
+  document.querySelectorAll('[data-rk]').forEach(el=>{ const pts=JSON.parse(el.dataset.rk); const r=ROUTER.get(pts);
+    if(r) el.textContent=`${r.km} km · ca. ${r.min>=60?Math.floor(r.min/60)+':'+String(r.min%60).padStart(2,'0')+' Std.':r.min+' Min.'} Fahrzeit`; });
+}
 
 /* ---------- map: SVG fallback ---------- */
 class SvgMap{
@@ -853,21 +1002,20 @@ class SvgMap{
     this.gL.selectAll('path').data(this.land.features).join('path').attr('class',d=>d.properties.mx?'land mx':'land').attr('d',this.path);
     this.draw(); this.fit(false);
   }
-  set(st){ this.st=st; this.hidePop(); if(this.w){ this.draw(); this.fit(true); } }
+  set(st,keep){ this.st=st; if(!keep) this.hidePop(); if(this.w){ this.draw(); if(!keep) this.fit(true); } }
   draw(){
-    const st=this.st;
-    const line=d3.line().curve(d3.curveCatmullRom.alpha(.5));
-    this.gR.selectAll('path').data(st.legs,d=>d.id).join('path')
-      .attr('class',d=>`route ${d.type} ${d.hi?'hi':''} ${d.dim?'dim':''}`)
-      .attr('d',d=>{ const pts=d.pts.map(p=>this.xy(ll(p)));
-        if(d.type==='flight'){ const [a,b]=[pts[0],pts[pts.length-1]]; const mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2, dx=b[0]-a[0], dy=b[1]-a[1];
-          const k=.18; return `M${a}Q${mx-dy*k},${my+dx*k} ${b}`; }
-        return line(pts); });
+    const st=this.st, line=d3.line();
+    const cls=d=>`route ${d.type} ${d.routed?'routed':''} ${d.hi?'hi':''} ${d.dim?'dim':''}`;
+    this.gR.selectAll('path').data(st.legs.concat(st.routes||[]),d=>d.id).join('path')
+      .attr('class',cls).attr('d',d=>line(d.coords.map(p=>this.xy(p))));
+    this.gPl=this.gPl||this.svg.insert('g',()=>this.gP.node());
+    this.gPl.selectAll('g.plane').data(st.legs.filter(d=>d.type==='flight'),d=>d.id).join(e=>{ const g=e.append('g'); g.append('path').attr('d',PLANE); return g; })
+      .attr('class',d=>`plane ${d.hi?'hi':''} ${d.dim?'dim':''}`);
     const g=this.gP.selectAll('g.pt').data(st.points,d=>d.id).join(enter=>{
-      const g=enter.append('g'); g.append('circle').attr('class','halo').attr('r',18); g.append('circle').attr('class','dot');
+      const g=enter.append('g'); g.append('circle').attr('class','halo').attr('r',18); g.append('circle').attr('class','dot'); g.append('path').attr('class','star').attr('d',STAR);
       g.append('text').attr('class','n'); g.append('text').attr('class','lb'); g.append('title'); return g; });
     g.attr('class',d=>`pt ${d.kind} ${d.lbl?'lbl':''}`).on('click',(e,d)=>{ e.stopPropagation(); this.cb(d); });
-    g.select('circle.dot').attr('r',d=>d.kind==='stop'?10:d.kind==='minor'?4:5.5);
+    g.select('circle.dot').attr('r',d=>d.kind==='stop'?10:d.kind==='tip'?10:d.kind==='minor'?4:5.5);
     g.select('text.n').text(d=>d.num||'');
     g.select('title').text(d=>d.label);
     g.select('text.lb').text(d=>d.kind==='minor'?'':d.label).attr('x',d=>d.kind==='stop'?14:9).attr('y',d=>d.kind==='stop'?4:4);
@@ -875,16 +1023,20 @@ class SvgMap{
   }
   apply(){
     const t=this.t; this.gW.attr('transform',t);
+    if(this.gPl) this.gPl.selectAll('g.plane').attr('transform',d=>{ const m=Math.floor(d.coords.length/2);
+      const a=this.xy(d.coords[m-1]), b=this.xy(d.coords[m+1]), c=this.xy(d.coords[m]);
+      const ang=Math.atan2(t.applyY(b[1])-t.applyY(a[1]), t.applyX(b[0])-t.applyX(a[0]))*180/Math.PI+90;
+      return `translate(${t.applyX(c[0])},${t.applyY(c[1])}) rotate(${ang}) scale(.95)`; });
     const W=this.w, H=this.h, pos=new Map();
     this.gP.selectAll('g.pt').each(d=>{const p=this.xy(d.ll); pos.set(d.id,[t.applyX(p[0]),t.applyY(p[1])]);})
       .attr('transform',d=>`translate(${pos.get(d.id)})`);
-    const R={}; this.gP.selectAll('g.pt').each(d=>R[d.id]=d.kind==='stop'?11:d.kind==='minor'?4:6);
+    const R={}; this.gP.selectAll('g.pt').each(d=>R[d.id]=d.kind==='stop'||d.kind==='tip'?11:d.kind==='minor'?4:6);
     const boxes=[...pos.entries()].map(([id,[x,y]])=>({id,b:[x-R[id],y-R[id],x+R[id],y+R[id]]}));
     const hit=(a,b)=>a[0]<b[2]&&a[2]>b[0]&&a[1]<b[3]&&a[3]>b[1];
     const placed=[];
     this.gP.selectAll('g.pt').sort((a,b)=>(a.num||0)-(b.num||0)).each(function(d){
-      const [x,y]=pos.get(d.id), lb=this.querySelector('text.lb'), off=d.kind==='stop'?14:9, wl=d.label.length*6.4+4;
-      if(d.kind==='minor'){ return; }
+      const [x,y]=pos.get(d.id), lb=this.querySelector('text.lb'), off=d.kind==='stop'||d.kind==='tip'?14:9, wl=d.label.length*6.4+4;
+      if(d.kind==='minor'||d.kind==='tip'){ return; }
       let ok=false;
       for(const side of (x>W-140?[-1,1]:[1,-1])){
         const bx= side>0?[x+off,y-9,x+off+wl,y+9]:[x-off-wl,y-9,x-off,y+9];
@@ -931,25 +1083,32 @@ class GMap{
     this.map=new google.maps.Map(el,{center:{lat:22,lng:-102},zoom:5,styles:GSTYLE,disableDefaultUI:true,zoomControl:true,gestureHandling:'greedy',clickableIcons:false});
     this.iw=new google.maps.InfoWindow();
   }
-  set(st){
+  set(st,keep){
     this.mk.forEach(m=>m.setMap(null)); this.ln.forEach(l=>l.setMap(null)); this.mk=[]; this.ln=[]; this.byId={};
-    const C={flight:'#8d8579',bus:'#3f5d55',car:'#3f5d55',boat:'#6c8a9b'};
-    st.legs.forEach(d=>{
-      const path=d.pts.map(p=>{const q=ll(p); return {lat:q[0],lng:q[1]};});
-      const dashed=d.type==='flight'||d.type==='boat'; const op=d.dim?.25:1;
-      this.ln.push(new google.maps.Polyline({map:this.map,path,geodesic:d.type==='flight',strokeColor:d.hi&&d.type==='flight'?'#22211f':C[d.type],strokeOpacity:dashed?0:.9*op,strokeWeight:d.hi?3.5:2.5,
-        icons:dashed?[{icon:{path:'M 0,-1 0,1',strokeOpacity:op,scale:2.5},offset:'0',repeat:d.type==='boat'?'7px':'12px'}]:[]}));
+    const P2=c=>({lat:c[0],lng:c[1]});
+    st.legs.concat(st.routes||[]).forEach(d=>{
+      const op=d.dim?.3:1, path=d.coords.map(P2);
+      if(d.type==='flight'){
+        this.ln.push(new google.maps.Polyline({map:this.map,path,geodesic:false,strokeColor:d.hi?'#22211f':'#6f6b63',strokeOpacity:.85*op,strokeWeight:d.hi?2.5:1.8,zIndex:2,
+          icons:[{offset:'50%',icon:{path:PLANE,scale:d.hi?1.25:1.05,fillColor:'#ffffff',fillOpacity:op,strokeColor:'#22211f',strokeOpacity:op,strokeWeight:1.6,anchor:new google.maps.Point(0,0)}}]}));
+      } else if(d.type==='boat'){
+        this.ln.push(new google.maps.Polyline({map:this.map,path,strokeOpacity:0,zIndex:1,icons:[{icon:{path:'M 0,-1 0,1',strokeColor:'#6c8a9b',strokeOpacity:op,scale:2.5},offset:'0',repeat:'7px'}]}));
+      } else {
+        this.ln.push(new google.maps.Polyline({map:this.map,path,strokeColor:ROAD,strokeOpacity:(d.routed?.9:.45)*op,strokeWeight:d.hi||d.kind==='day'?4:3,zIndex:d.kind==='day'?4:3}));
+      }
     });
     st.points.forEach(d=>{
-      const stop=d.kind==='stop';
-      const m=new google.maps.Marker({map:this.map,position:{lat:d.ll[0],lng:d.ll[1]},title:d.label,
+      const stop=d.kind==='stop', tip=d.kind==='tip';
+      const m=new google.maps.Marker({map:this.map,position:P2(d.ll),title:d.label,zIndex:tip?50:stop?40:10,
         label:d.num?{text:String(d.num),color:'#fff',fontSize:'11px',fontWeight:'600'}:undefined,
-        icon:{path:google.maps.SymbolPath.CIRCLE,scale:stop?11:d.kind==='minor'?4:6,fillColor:stop?'#3f5d55':d.kind==='minor'?'#8a857b':'#22211f',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});
+        icon: tip ? {path:STAR,scale:1.25,fillColor:'#d39b3a',fillOpacity:1,strokeColor:'#fff',strokeWeight:1.6,anchor:new google.maps.Point(0,0)}
+                  : {path:google.maps.SymbolPath.CIRCLE,scale:stop?11:d.kind==='minor'?4:6,fillColor:stop?'#3f5d55':d.kind==='minor'?'#8a857b':'#22211f',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});
       m.addListener('click',()=>this.cb(d)); this.mk.push(m); this.byId[d.id]=m;
     });
+    if(keep) return;
     const f=st.focus||[];
-    if(f.length===1){ this.map.panTo({lat:f[0][0],lng:f[0][1]}); this.map.setZoom(14); }
-    else if(f.length){ const b=new google.maps.LatLngBounds(); f.forEach(p=>b.extend({lat:p[0],lng:p[1]})); this.map.fitBounds(b,60); }
+    if(f.length===1){ this.map.panTo(P2(f[0])); this.map.setZoom(14); }
+    else if(f.length){ const b=new google.maps.LatLngBounds(); f.forEach(p=>b.extend(P2(p))); this.map.fitBounds(b,60); }
   }
   focusPoint(p){ this.map.panTo({lat:p[0],lng:p[1]}); if(this.map.getZoom()<14) this.map.setZoom(14); }
   highlight(id){ Object.entries(this.byId||{}).forEach(([k,m])=>m.setZIndex(k===id?999:1)); }
@@ -958,22 +1117,36 @@ class GMap{
 
 /* ---------- map state per view ---------- */
 let MAP=null, VIEW={v:'overview'};
+function legsState(dayIso){
+  return LEGS.map(l=>{
+    let coords, routed=false;
+    if(l.type==='flight') coords=arcPoints(ll(l.pts[0]), ll(l.pts[l.pts.length-1]));
+    else if(l.type==='boat') coords=l.pts.map(ll);
+    else { const rp=legRoadPts(l), r=ROUTER.get(rp); if(r){ coords=r.c; routed=true; } else { coords=l.pts.map(ll); ROUTER.want(rp); } }
+    const on = !dayIso || l.day===dayIso;
+    return {id:l.id, type:l.type, coords, routed, hi:!!dayIso&&on, dim:!!dayIso&&!on};
+  });
+}
 function mapState(){
   if(VIEW.v==='day'){
     const d=DAYS[VIEW.i], pl=dayPlaces(d);
+    const routes=[]; daySegments(d).forEach((sg,i)=>{ const r=ROUTER.get(sg); if(r) routes.push({id:'day'+i,kind:'day',type:'car',coords:r.c,routed:true,hi:true}); else ROUTER.want(sg); });
+    const tips=TIPS.filter(t=>t.day===d.date);
     return {
-      points: pl.map((id,k)=>({id,ll:ll(id),label:P(id)[2],num:k+1,kind:'stop'})),
-      legs: LEGS.map(l=>({...l,hi:l.day===d.date,dim:l.day!==d.date})),
-      focus: pl.map(ll)
+      points: pl.map((id,k)=>({id,ll:ll(id),label:P(id)[2],num:k+1,kind:'stop'})).concat(tips.map(t=>({id:t.place,ll:ll(t.place),label:'Geheimtipp: '+t.title,kind:'tip',tip:t.id}))),
+      legs: legsState(d.date).map(l=>l.type==='flight'||l.type==='boat'?l:{...l,dim:true,hi:false}),
+      routes,
+      focus: pl.map(ll).concat(tips.map(t=>ll(t.place)))
     };
   }
   return {
     points: HUBS.map(h=>({id:h.p,ll:ll(h.p),label:h.label,kind:h.minor?'minor':'hub',day:h.day})),
-    legs: LEGS.map(l=>({...l})),
+    legs: legsState(null),
     focus: HUBS.map(h=>ll(h.p)).concat([[22.6,-111.6],[26.4,-99.6]])
   };
 }
 function onPoint(d){
+  if(d.kind==='tip'){ openTip(d.tip); return; }
   if(d.kind!=='stop'){ location.hash='#tag-'+dd(d.day); return; }
   highlight(d.id,false); MAP.showPop&&MAP.showPop(d);
 }
@@ -997,7 +1170,7 @@ function initMap(){
   s.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(CONFIG.googleMapsApiKey)+'&callback=__gmInit&loading=async';
   document.head.appendChild(s);
 }
-function addLegend(el){ el.insertAdjacentHTML('beforeend',`<div class="legend"><span><i class="f"></i>Flug</span><span><i></i>Bus/Auto</span><span><i class="b"></i>Boot</span></div>`); }
+function addLegend(el){ el.insertAdjacentHTML('beforeend',`<div class="legend"><span><svg class="lp" viewBox="-13 -13 26 26"><path d="${PLANE}"/></svg>Flug</span><span><i></i>Straße</span><span><i class="b"></i>Boot</span><span><svg class="ls" viewBox="-10 -10 20 20"><path d="${STAR}"/></svg>Geheimtipp</span></div>`); }
 
 /* ---------- router ---------- */
 function route(){
@@ -1009,6 +1182,7 @@ function route(){
   $('#content').innerHTML = VIEW.v==='day'?vDay(VIEW.i):VIEW.v==='bookings'?vBookings():vOverview();
   $('#content').scrollTop=0; if(window.innerWidth<=900 && VIEW.v!=='overview') window.scrollTo({top:0});
   if(MAP) MAP.set(mapState());
+  fillRouteKm();
 }
 window.addEventListener('hashchange',route);
 window.addEventListener('offline',()=>{ header(); if(MAP instanceof GMap){ const el=$('#map'); MAP=null; el.innerHTML=''; el.classList.remove('gm');
