@@ -1,5 +1,5 @@
 // Offline-Cache für das Reise-Dashboard
-const V = 'mexiko-reise-v2';
+const V = 'mexiko-reise-v3';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 const LIBS = ['https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js'];
 
